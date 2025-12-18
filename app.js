@@ -1,8 +1,8 @@
 const express =require("express");
 const app= express();
+app.use(express.json());
+const userRouter = require("./routes/user");
 
-app.get("/",(req,res)=>{
-  res.send("gbgfdewywefb");
-});
+app.use("/users",userRouter);
 
 module.exports=app
