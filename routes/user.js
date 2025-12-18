@@ -1,8 +1,9 @@
 const express =require("express");
 const userController= require("../controllers/userController");
 const router =express.Router();
-
+const check_auth= require("../middeware/check-auth");
 router.post("/singUp",userController.singUp);
 router.post("/login",userController.login);
-
+router.patch("/:id",check_auth.check_auth,userController.updatedUser);
+router.delete("/:id",check_auth.check_auth,userController.deleteuser);
 module.exports=router;
