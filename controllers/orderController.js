@@ -37,29 +37,31 @@ async function listOrders(req,res){
   
     }
 }
- function updateOrders(req,res){
+ async function updateOrders(req,res){
         const id = req.params.id;
+         try{
       const orderUpdate={
       order_status:req.body.order_status.toUpperCase(),
       total: req.body.total, 
     }
+   
     if(req.body.user_id){
         orderUpdate.user_id=req.body.user_id;
     }
-       const result=orderModel.update(orderUpdate,{where:{id:id}});
+       const result= await orderModel.update(orderUpdate,{where:{id:id}});
        if(result){
            res.status(201).json({message:"Pedido atualizado com sucesso!!",post :orderUpdate});
        }
-        try{
+        
         
         }catch(error){
           return res.status(500).json({ error: error});
         }
     }
-    function deleteOrder(req,res){
+    async function deleteOrder(req,res){
          const id = req.params.id;
          try{
-          const result=orderModel.destroy({where:{id:id}});
+          const result= await orderModel.destroy({where:{id:id}});
 
           if(result){
             res.status(204).json({message:"Pedido deletado  com sucesso!!"});
