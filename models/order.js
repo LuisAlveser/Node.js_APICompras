@@ -13,8 +13,15 @@ module.exports = (sequelize, DataTypes) => {
      order.belongsTo(models.user,{
       foreignKey:"user_id"
      }
-     
+  
      );
+        order.hasMany(models.orders_itens,{
+      foreignKey:"order_id"
+     }
+  
+     );
+     
+     
     }
   }
   order.init({

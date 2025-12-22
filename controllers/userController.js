@@ -1,5 +1,6 @@
 const db = require("../models/index");
 const userModel = db.user;
+const orderModel=db.order;
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { where } = require("sequelize");
@@ -121,13 +122,35 @@ async function deleteuser(req,res){
         post:error
        }); 
    }
-
+  
 
 }
+ async function findByIdUser(req,res){
+    const id =req.params.id;
+    try{
+      const result = await userModel.findByPk(id,{include: [{model:orderModel}]});
+      if(result){
+        res.status(200).json(result);
+        
+      }else{
+        res.status(400).json({
+        message:" Nenhum usuário encontrado!!!" ,
+      
+       });
+      }
+    }catch(error){
+       res.status(500).json({
+        post:error
+       }); 
+    }
+
+   }
+
 
 module.exports = {
   singUp: singUp,
   login:login,
   updatedUser:updatedUser,
-  deleteuser:deleteuser
+  deleteuser:deleteuser,
+  findByIdUser:findByIdUser,
 };

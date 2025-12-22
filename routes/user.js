@@ -6,4 +6,5 @@ router.post("/singUp",userController.singUp);
 router.post("/login",userController.login);
 router.patch("/:id",check_auth.check_auth,userController.updatedUser);
 router.delete("/:id",check_auth.check_auth,userController.deleteuser);
+router.get("/:id",userController.findByIdUser);
 module.exports=router;
