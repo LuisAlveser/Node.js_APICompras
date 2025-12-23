@@ -4,24 +4,36 @@ const { updateOrders } = require("./orderController");
 const order_itensModel = db.orders_itens;
 const orderModel = db.order;
 const productModel = db.products;
+
 async function addOrder_itens(req,res){
-   
+     const transaction = await db.sequelize.transaction();
     try{
-     
+        const product=await productModel.findByPk(req.body.product_id);
+        if(!product){
+            res.status(400).json("Produto não encontrado");
+        }
+        if (product.quantity < req.body.quantity) {
+            return res.status(400).json(`Estoque insuficiente. Disponível: ${product.quantity}`);
+        }
+  
     const order_item={
        product_id:req.body.product_id,
        order_id :req.body.order_id,
        quantity:req.body.quantity, 
-       unit_price:req.body.unit_price
+       unit_price:req.body.quantity*product.price
     }
-  const result =await order_itensModel.create(order_item);
+
+  const result =await order_itensModel.create(order_item,{ transaction });
+  await product.decrement('quantity', { by: req.body.quantity, transaction });
+  
   if(result){
+    await transaction.commit();
       res.status(200).json({
         message:"Pedidos Itens criado com sucesso!",
         post:order_item
     });
-  }
-
+  
+        }
 }catch(error){
   return res.status(500).json({ error: error});   
 }

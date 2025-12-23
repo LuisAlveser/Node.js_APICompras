@@ -82,6 +82,23 @@ async function deleteProduct(req,res){
          }
 
     }
+    async function addstockProduct(req,res){
+      const transaction = await db.sequelize.transaction();
+    const id =req.params.id;
+     try{
+     const result = await productsModel.findByPk(id);
+   
+        
+        if(result){
+           const e= await result.increment('quantity', { by: req.body.quantity, transaction });
+           await transaction.commit();
+            res.status(201).json({message:"Estoque  atualizado com sucesso!!"});
+         } 
+    }catch(error){
+        return res.status(500).json({ error: error});
+    }
+      }
+    
 
 
 
@@ -90,5 +107,7 @@ module.exports={
     updateProduct:updateProduct,
     findAllProducts:findAllProducts,
     findIdProducts:findIdProducts,
-    deleteProduct:deleteProduct
+    deleteProduct:deleteProduct,
+    addstockProduct:addstockProduct,
+    
 }
